@@ -2,30 +2,37 @@
 
 The `sendtext` skill sends iMessage/SMS on your behalf through a macOS **Shortcut** named
 **`SendText`**. Shortcuts can't be reliably shipped as a file across machines (they're signed
-per-Mac), so you build this once — it's four actions and takes ~2 minutes.
+per-Mac), so you build this once — it's a handful of actions and takes ~2 minutes.
 
 > **Doing this with Claude Code?** Say *"help me build the SendText shortcut"* and it'll walk you
 > through it action by action, then test it.
 
 ## What it does
-It receives one piece of text shaped like `+15551234567|your message`, splits it on the `|`, and
-sends the message silently (no compose window).
+It receives one piece of text shaped like `+15551234567|your message`, splits it on the `|` into a
+recipient and a body, and sends the message silently (no compose window).
+
+## What the finished shortcut looks like
+Build it to match this layout exactly:
+
+![The SendText shortcut: Receive input → Split by "|" → First Item → set Recipient → Last Item → set Body → Send](images/sendtext-shortcut.png)
 
 ## Build it
-1. Open the **Shortcuts** app → **+** (new shortcut) → name it exactly **`SendText`**.
-2. Add these actions in order (search each by name in the right-hand action list):
+1. Open the **Shortcuts** app → **+** (new shortcut) → rename it exactly **`SendText`**.
+2. Open the shortcut's settings (the **ⓘ** / info button) → make sure it **Receives** input, and set
+   **If there's no input: Continue** (as shown in the top block of the screenshot).
+3. Add these actions in order (search each by name in the action list on the right):
 
    | # | Action | Configure |
    |---|--------|-----------|
-   | 1 | **Split Text** | Text = **Shortcut Input**; Separator = **Custom** → type `\|` (a single pipe) |
-   | 2 | **Get Item from List** | Get **Item at Index** **1** of **Split Text** → this is the recipient |
-   | 3 | **Get Item from List** | Get **Item at Index** **2** of **Split Text** → this is the message |
-   | 4 | **Send Message** | Message = the item from action 3; Recipients = the item from action 2 |
+   | 1 | **Split Text** | Split **Shortcut Input** by **Custom** separator → type a single pipe `\|` |
+   | 2 | **Get Item from List** | Get **First Item** from **Split Text** |
+   | 3 | **Set Variable** | Set variable **`Recipient`** to that **Item from List** |
+   | 4 | **Get Item from List** | Get **Last Item** from **Split Text** |
+   | 5 | **Set Variable** | Set variable **`Body`** to that **Item from List** |
+   | 6 | **Send Message** | Send **`Body`** to **`Recipient`** |
 
-3. Open the Send Message action's options and turn **OFF** "Show When Run" (a.k.a. the compose
-   sheet) so it sends silently.
-4. In the shortcut's settings (ⓘ), make sure **"Receives … input"** is set (Text) so a piped
-   string reaches action 1.
+4. On the **Send Message** action, expand it (the **⌄** chevron) and turn **OFF** "Show When Run"
+   (the compose sheet) so it sends silently.
 
 ## Test it
 In Terminal:
