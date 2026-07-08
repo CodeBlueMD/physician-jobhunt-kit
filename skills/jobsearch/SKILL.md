@@ -29,6 +29,26 @@ file — so we **send-on-confirm** rather than draft.
 Build the signature and self-intro from the profile. Default sign-off is short and casual
 (`identity.sign_off` + email · phone). Only use a formal block if the user explicitly asks.
 
+## 1a. Learn the user's email voice (first run, then reuse)
+Drafts should sound like the USER, not like a generic template. If `identity.email_style` is blank:
+- Read **5–10 of the user's own sent emails** — `list_messages` (`account_alias: <send_alias>`,
+  query `in:sent -in:chats`), skipping automated/receipt mail; `read_message` a handful of genuine
+  person-to-person ones (ideally professional/outreach if any exist).
+- Note their patterns: greeting ("Hi [name]," vs "Hello,"), typical length, formality, contractions,
+  em-dash use, how they close, emoji or not, whether they lead with the ask.
+- **Write a 1–2 sentence summary into `identity.email_style` in `~/.jobhunt-kit/profile.yml`** so it's
+  reused every session. Show the user what you learned and let them correct it.
+- If there's no useful sent mail, keep the default short-warm house style (§4) and ask the user for
+  one or two example emails, or a sentence describing their tone.
+When `identity.email_style` is set, blend it with the §4 house rules on every draft (the house rules —
+short, warm, visa line placement, no formal title block — still win on structure; their style tunes tone).
+
+## 1b. Verify the CV before any send (the résumé auto-attaches — make sure it's there)
+Every email attaches the CV automatically via `send_message` `attachments: [{ path: <identity.cv_path> }]`.
+**Before the first send of a session, confirm `identity.cv_path` actually exists on disk** (and is a
+PDF). If it's missing or the path is wrong, STOP and tell the user — never send an inquiry without the
+résumé attached. Bodies read "My CV is attached," so a missing file would make you a liar.
+
 ## 2. The screen → from `criteria` (+ `visa`)
 Score each location out of 10 against `criteria.*`; rank most→least. All must hold unless
 the user changes them:
@@ -100,8 +120,17 @@ sponsorship filter. (Do not invent one.)
      "Hi there," / "Hello Physician Recruitment,". This is how you reach HR when there's no named recruiter.
    - 🌐 **Portal only:** if the employer publishes no email at all (some large systems), address the
      draft to the user as a template and note the application URL; a recruiter is assigned after applying.
-4. **Build one email per location**, addressed to the best available recipient (§4), and
-   **send with google-mcp `send_message`** (alias = `identity.send_alias`, CV attached by path).
+4. **Build one email per location**, addressed to the best available recipient (§4).
+4a. **Send a formatting TEST to the user first** (if `outreach.send_test_email_first`, and once per
+   session before the first real send): `send_message` ONE representative draft **to the user's own
+   address** (`identity.email`) — same subject, same `html_body` (with the bold visa line if
+   applicable), and the **CV attached** — so nothing untested reaches a recruiter. Then:
+   - `read_message` the sent test and **auto-check**: the body has NO literal `<p>`/`&lt;`/`<b>`
+     artifacts (the bold rendered, not raw tags), and the attachment (CV) is present.
+   - Tell the user to glance at it in their inbox and confirm: does the bold render? did the CV
+     attach? does the tone/signature look right? **Only proceed to real recipients after they OK it.**
+   - If the HTML shows literal tags, drop `html_body` and resend plain-text (still renders, just no bold).
+5-send. **Then send the real emails** with `send_message` (alias = `identity.send_alias`, CV attached).
    `send_message` dispatches immediately → present the full list and send only on the user's go-ahead.
 5. **Confidence-label** every recipient in your summary (✅ / 🔶 high / 🔶 medium / 📥 / 🌐).
 6. **Update the tracker** (§5).

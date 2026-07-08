@@ -67,6 +67,12 @@ The kit doesn't just send once and forget — it runs the pipeline for you:
 | `followup_after_days` | If a recruiter hasn't replied in this many days, the next run drafts a friendly follow-up for your approval (default 7). |
 | `max_email_guesses` | When a recruiter's email isn't published, the kit infers it from the org's email format and tries the most likely address; if it bounces it walks a permutation ladder up to this many tries. |
 | `escalate_to_hr` | When there's no named recruiter or the guesses are exhausted, fall back to the HR / `recruiting@` / careers inbox instead of giving up. |
+| `send_test_email_first` | Before the first real send, email a test to *yourself* with the real formatting + your CV attached, so you can confirm it renders correctly and the résumé is attached (default on). |
+
+**Your writing voice + your résumé:** on first use the assistant reads a few of your own sent emails
+and fills `identity.email_style` so drafts sound like you (edit it any time). Your CV (`identity.cv_path`)
+is attached to every email automatically — the assistant checks the file exists before sending so an
+inquiry never goes out without it.
 
 The tracker Google Sheet is **created automatically** on your first run (you don't make it) and every
 send, bounce, retry, and follow-up is logged there with a status (`SENT`/`BOUNCED`/`RETRIED`/

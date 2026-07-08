@@ -21,6 +21,11 @@ J-1/H-1B logic on or off.
 | **doccafe-triage** | Each morning, screen the [DocCafe](https://www.doccafe.com) recruiter emails in your inbox against your criteria, draft replies for the good ones, log them to the same tracker, and **text you the queue** to approve. Never emails a recruiter unattended. |
 | **sendtext** *(macOS)* | Draft and send iMessage/SMS in *your* texting voice — professional for recruiters, casual for friends — and "catch me up on my texts." |
 
+**It writes like you, and checks itself before it sends.** On first use it reads a few of your own
+sent emails to learn your voice, attaches your résumé to every message automatically, and sends a
+**test email to yourself first** so you can confirm the formatting renders and the CV attached — before
+a single recruiter hears from you.
+
 **The pipeline runs itself between sessions:** the tracker is created for you on first run; every send
 is logged; bounced addresses are retried down a permutation ladder; silent recruiters get a follow-up
 drafted for your approval after a configurable number of days. You approve every message; it does the chasing.

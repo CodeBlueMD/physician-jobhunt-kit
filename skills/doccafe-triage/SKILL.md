@@ -50,8 +50,10 @@ explicitly says "GO" (per-message human approval).
 - **SKIP:** locums, wrong specialty, low-pay outpatient, requirements the candidate doesn't meet,
   or a firm already in the tracker.
 
-## Draft email (owner's voice; CV attached on send)
-Build from the profile — same short, warm style as jobsearch §4:
+## Draft email (owner's voice; CV auto-attached on send)
+Build from the profile — same short, warm style as jobsearch §4, blended with the owner's learned
+`identity.email_style` (see jobsearch §1a; learn it from their sent mail if blank). The CV attaches
+automatically — confirm `identity.cv_path` exists before the first send (jobsearch §1b).
 "Hi [First name], thanks for reaching out about the [role] in [place]. I'm [training.summary],
 targeting a [target_start] start. {{if visa.required}}Quick note up front — I'm on
 [visa.situation]; could you confirm the role supports that?{{/if}} Could you share the base

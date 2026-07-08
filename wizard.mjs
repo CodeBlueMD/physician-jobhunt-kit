@@ -92,6 +92,7 @@ identity:
   sign_off: |
     Thanks!
     ${first}
+  email_style: ""
 
 training:
   summary: ${q(summary)}
@@ -125,6 +126,7 @@ outreach:
   followup_after_days: 7
   max_email_guesses: 3
   escalate_to_hr: true
+  send_test_email_first: true
 
 texting:
   enabled: ${texting}

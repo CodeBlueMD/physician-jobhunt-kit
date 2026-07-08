@@ -88,10 +88,18 @@ can read Messages for "catch me up."
 Offer to set up the daily DocCafe triage via launchd (**docs/SETUP.md § Scheduling**). Emphasize it's
 owner-facing only — it can't email recruiters unattended.
 
+### Step 9 — On first real use (learn their voice + a test email)
+The first time they draft outreach:
+- **Learn their email voice** (jobsearch §1a): read a few of their own sent emails and write a short
+  `identity.email_style` into the profile so drafts sound like them, not a template. Show them what you learned.
+- **Send a formatting test to themselves first** (jobsearch §4a): before any recruiter gets an email,
+  send one test to their own address with the real formatting + the CV attached, auto-check that the
+  bold rendered (no literal `<p>` tags) and the CV is attached, and have them eyeball it. Only then send for real.
+
 ### Done
 Summarize what's set up and how to use it: `/jobsearch`, `/doccafe-triage`, `/sendtext`, and that they
 tune everything by editing `~/.jobhunt-kit/profile.yml`. Remind them you'll always draft-and-confirm
-before sending anything.
+before sending anything, learn their writing voice, and test formatting on themselves before real outreach.
 
 ---
 

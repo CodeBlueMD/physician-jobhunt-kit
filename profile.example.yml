@@ -18,11 +18,15 @@ identity:
   email: "jane.smith@gmail.com"        # the account you SEND from (a google-mcp alias)
   send_alias: "personal"               # the google-mcp alias that maps to that email
   phone: "+15551234567"                # E.164; goes in your signature
-  cv_path: "/Users/you/Downloads/Jane_Smith_MD_CV.pdf"   # absolute path; attached to every email
+  cv_path: "/Users/you/Downloads/Jane_Smith_MD_CV.pdf"   # absolute path; auto-attached to every email
   # A short, casual sign-off in your own voice:
   sign_off: |
     Thanks!
     Jane
+  # Leave blank — on first run the assistant reads a few of YOUR sent emails and fills this with a
+  # short description of your voice (greeting, length, formality) so drafts sound like you, not a
+  # template. You can also just describe your style here yourself.
+  email_style: ""
 
 training:
   # Free-text — how you describe yourself to a recruiter. Be specific; this is
@@ -82,6 +86,7 @@ outreach:
   followup_after_days: 7     # no reply after this many days → draft a follow-up (for your approval)
   max_email_guesses: 3       # when guessing a recruiter's address, try up to this many permutations
   escalate_to_hr: true       # no named recruiter / all guesses bounced → fall back to HR / recruiting@ inbox
+  send_test_email_first: true  # before the first real send, email a test to YOURSELF to check formatting + that the CV attached
 
 # ── TEXTING (optional, macOS only) ───────────────────────────────────────────
 # The sendtext skill can draft + send iMessage/SMS in your voice via a macOS
