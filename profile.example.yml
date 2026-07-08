@@ -1,0 +1,89 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#  physician-jobhunt-kit — YOUR profile
+# ═══════════════════════════════════════════════════════════════════════════
+# This one file makes the whole kit *yours*. The skills read it every run and
+# use these values verbatim (your name in signatures, your criteria in the
+# screen, your CV on every email).
+#
+#   • Copy this file to  ~/.jobhunt-kit/profile.yml  (the wizard does this for you)
+#   • Fill in every field. Anything left blank, the assistant will ask about.
+#   • It lives OUTSIDE the repo and is gitignored — your data is never committed.
+#
+# All example values below are FAKE. Replace them.
+# ═══════════════════════════════════════════════════════════════════════════
+
+identity:
+  name: "Dr. Jane Smith, MD"          # exactly as it should appear in signatures
+  first_name: "Jane"                   # used in the friendly sign-off
+  email: "jane.smith@gmail.com"        # the account you SEND from (a google-mcp alias)
+  send_alias: "personal"               # the google-mcp alias that maps to that email
+  phone: "+15551234567"                # E.164; goes in your signature
+  cv_path: "/Users/you/Downloads/Jane_Smith_MD_CV.pdf"   # absolute path; attached to every email
+  # A short, casual sign-off in your own voice:
+  sign_off: |
+    Thanks!
+    Jane
+
+training:
+  # Free-text — how you describe yourself to a recruiter. Be specific; this is
+  # woven into every email so it should sound like you.
+  summary: >-
+    finishing Family Medicine residency in 2027, with experience across family,
+    emergency, and inpatient medicine; comfortable with procedures and learning POCUS
+  graduation: "June 2027"
+  target_start: "August 2027"
+
+# ── VISA ─────────────────────────────────────────────────────────────────────
+# THE big toggle. IMG on a training visa → required: true (turns on all the
+# J-1/H-1B logic: subject-line visa tag, an upfront visa line in every email,
+# and a hard filter that skips employers who don't sponsor). US grad / citizen /
+# green card → required: false and every visa mention disappears.
+visa:
+  required: false
+  # Only used when required: true. Describe your exact situation:
+  situation: "J-1 visa — need a J-1 waiver + H-1B sponsorship"
+  # Short label for the subject line, e.g. "(J-1 visa)":
+  subject_tag: "(J-1 visa)"
+
+# ── CRITERIA (the screen) ────────────────────────────────────────────────────
+# Every lead is scored against these. Change them freely; the assistant adapts.
+criteria:
+  specialties: ["Family Medicine"]           # what you trained in
+  target_roles:                              # roles you'll accept
+    - "hospitalist / nocturnist"
+    - "emergency medicine open to FM-trained physicians (no EM residency required)"
+  min_comp_usd: 300000                       # skip / flag below this base
+  outpatient_ok_above_usd: 350000            # outpatient only if it clears this
+  new_grad_friendly: true                    # flag postings that demand years of prior attending experience
+  no_locums: true
+  geography: ["any"]                         # or a list of states, e.g. ["TN", "TX", "GA"]
+  climate: "mild-ish winters, ideally four seasons"
+  lifestyle: "within ~1–2 hours of a city, good schools, safe, good place to raise a family"
+  no_income_tax_states_preferred: true       # TN, TX, FL, etc. improve take-home
+
+  # Community-welcome check: research whether a place is genuinely welcoming to
+  # someone of your background before applying (retained international docs, no
+  # hate-group presence, welcoming-community signals). Especially useful for IMGs
+  # and physicians of color. Set false to skip it entirely.
+  welcome_check: true
+  # One line the assistant should optimize for (WHY you care), e.g.:
+  welcome_note: "I want somewhere my family is genuinely welcome and safe."
+
+# ── TRACKER ──────────────────────────────────────────────────────────────────
+# A Google Sheet the kit logs every outreach to. Leave sheet_id blank and let
+# the assistant create one for you on first run (it writes the id back here).
+tracker:
+  sheet_id: ""
+  sheet_name: "Physician Job Search — Email Tracker"
+
+# ── TEXTING (optional, macOS only) ───────────────────────────────────────────
+# The sendtext skill can draft + send iMessage/SMS in your voice via a macOS
+# Shortcut named "SendText" (see docs/SENDTEXT_SHORTCUT.md). Set enabled: false
+# to skip texting entirely and use only the email skills.
+texting:
+  enabled: false
+  your_number: "+15551234567"      # your own cell (receipts/queues get texted here)
+  # Known recruiter / contact numbers you want on file (E.164). Optional.
+  contacts: {}
+    # example:
+    # "Recruiter Name": "+15550001111"

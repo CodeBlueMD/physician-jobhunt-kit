@@ -1,0 +1,21 @@
+# ── Secrets & personal data — NEVER commit ──────────────────────────
+# Your Google OAuth client (downloaded from Google Cloud Console)
+google-mcp/credentials.json
+credentials.json
+# Per-account OAuth tokens (auto-created when you authenticate)
+google-mcp/.tokens/
+.tokens/
+# Your filled-in profile (name, phone, criteria, contacts)
+profile.yml
+.jobhunt-kit/
+# Anything else that could hold personal info
+*.local.yml
+*.secret*
+.env
+.env.*
+
+# ── Build / OS cruft ────────────────────────────────────────────────
+node_modules/
+dist/
+*.log
+.DS_Store

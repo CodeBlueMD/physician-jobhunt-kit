@@ -1,0 +1,6 @@
+# Secrets — never commit
+credentials.json
+.tokens/
+node_modules/
+dist/
+.DS_Store
