@@ -30,6 +30,14 @@ a single recruiter hears from you.
 is logged; bounced addresses are retried down a permutation ladder; silent recruiters get a follow-up
 drafted for your approval after a configurable number of days. You approve every message; it does the chasing.
 
+### The texting shortcut (macOS)
+`sendtext` sends through a tiny macOS Shortcut named **SendText** that you build once (setup walks you
+through it). It should look like this:
+
+![The SendText shortcut: Receive input → Split by "|" → First Item → set Recipient → Last Item → set Body → Send](docs/images/sendtext-shortcut.png)
+
+Full build guide: [`docs/SENDTEXT_SHORTCUT.md`](docs/SENDTEXT_SHORTCUT.md).
+
 Everything is tailored by **one config file** (`~/.jobhunt-kit/profile.yml`): your name, CV, visa
 situation, comp target, geography, and more. Change your search any time by editing it.
 
