@@ -60,6 +60,13 @@ salary, schedule, and exact location? My CV is attached. [identity.sign_off] · 
 On the owner's GO: send via google-mcp `send_message` (`account_alias: identity.send_alias`),
 `attachments: [{ path: identity.cv_path }]`, subject `Re: <their subject>`.
 
+## Tracker (shared with jobsearch, auto-created)
+Use the same Google Sheet as `jobsearch` (`tracker.sheet_id`). If it's blank, create it with
+`create_sheet` (same 10-column header) and write the id back into `~/.jobhunt-kit/profile.yml`.
+Log every DocCafe send as a row (channel "📧 DocCafe"). Bounces + no-reply follow-ups are handled by
+the same failed-response routine as jobsearch §5b. If a pitch has no usable recruiter email, apply
+the same OSINT ladder / HR-inbox escalation.
+
 ## Dedupe + recency check (MANDATORY before queueing or sending)
 1. Check the tracker (`tracker.sheet_id`) for the recruiter email OR firm. Already present → SKIP
    (or treat as a follow-up, not fresh outreach).

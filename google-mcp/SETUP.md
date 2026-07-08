@@ -51,8 +51,8 @@ Restart Claude, then try: *"List my last 5 emails for account personal."*
 ## Tools
 `list_messages`, `read_message`, `create_draft`, `send_message` (supports file attachments),
 `list_events`, `create_event`, `list_files`, `read_file`, `upload_file`,
-`read_sheet`, `append_rows`, `update_cells`. Every tool takes an `account_alias` matching a
-file in `.tokens/`.
+`create_sheet`, `read_sheet`, `append_rows`, `update_cells`, `clear_range`, `delete_rows`. Every
+tool takes an `account_alias` matching a file in `.tokens/`.
 
 ## Troubleshooting
 - **"Access blocked" in the browser** → your email isn't added as a Test User on the OAuth

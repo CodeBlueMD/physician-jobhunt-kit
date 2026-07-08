@@ -17,9 +17,13 @@ J-1/H-1B logic on or off.
 
 | Skill | What it does |
 |-------|--------------|
-| **jobsearch** | Research physician roles that match your profile, find the real recruiter's email, draft a short warm inquiry with your CV attached, and track every outreach in a Google Sheet. Runs a "is this community welcoming?" check before applying. |
-| **doccafe-triage** | Each morning, screen the [DocCafe](https://www.doccafe.com) recruiter emails in your inbox against your criteria, draft replies for the good ones, log them, and **text you the queue** to approve. Never emails a recruiter unattended. |
+| **jobsearch** | Research physician roles that match your profile, find the real recruiter's email (and if there isn't one published, **OSINT-guess it from the org's email format and, if that bounces, escalate to HR / the recruiting inbox**), draft a short warm inquiry with your CV attached, and **auto-create + maintain a Google Sheet tracker**. It **catches bounces and retries**, and **drafts follow-ups when a recruiter goes silent**. Runs a "is this community welcoming?" check before applying. |
+| **doccafe-triage** | Each morning, screen the [DocCafe](https://www.doccafe.com) recruiter emails in your inbox against your criteria, draft replies for the good ones, log them to the same tracker, and **text you the queue** to approve. Never emails a recruiter unattended. |
 | **sendtext** *(macOS)* | Draft and send iMessage/SMS in *your* texting voice — professional for recruiters, casual for friends — and "catch me up on my texts." |
+
+**The pipeline runs itself between sessions:** the tracker is created for you on first run; every send
+is logged; bounced addresses are retried down a permutation ladder; silent recruiters get a follow-up
+drafted for your approval after a configurable number of days. You approve every message; it does the chasing.
 
 Everything is tailored by **one config file** (`~/.jobhunt-kit/profile.yml`): your name, CV, visa
 situation, comp target, geography, and more. Change your search any time by editing it.

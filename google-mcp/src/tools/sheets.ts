@@ -1,6 +1,59 @@
 import { google } from "googleapis";
 import { getClient } from "../google-client.js";
 
+// Create a brand-new spreadsheet, optionally with a header row (bolded + frozen).
+// Returns the spreadsheet_id + URL — use the id for all later read/append/update calls.
+export async function createSheet(params: {
+  account_alias: string;
+  title: string;
+  header?: string[];
+  tab_title?: string;
+}) {
+  const sheets = google.sheets({ version: "v4", auth: getClient(params.account_alias) });
+  const created = await sheets.spreadsheets.create({
+    requestBody: {
+      properties: { title: params.title },
+      sheets: params.tab_title ? [{ properties: { title: params.tab_title } }] : undefined,
+    },
+    fields: "spreadsheetId,spreadsheetUrl,sheets(properties(sheetId,title))",
+  });
+  const spreadsheetId = created.data.spreadsheetId!;
+  const firstSheet = created.data.sheets?.[0]?.properties;
+  const sheetId = firstSheet?.sheetId ?? 0;
+  const tab = firstSheet?.title ?? "Sheet1";
+
+  if (params.header && params.header.length) {
+    await sheets.spreadsheets.values.update({
+      spreadsheetId,
+      range: `${tab}!A1`,
+      valueInputOption: "USER_ENTERED",
+      requestBody: { values: [params.header] },
+    });
+    // Bold + freeze the header row so the tracker looks like a real tracker.
+    await sheets.spreadsheets.batchUpdate({
+      spreadsheetId,
+      requestBody: {
+        requests: [
+          {
+            repeatCell: {
+              range: { sheetId, startRowIndex: 0, endRowIndex: 1 },
+              cell: { userEnteredFormat: { textFormat: { bold: true } } },
+              fields: "userEnteredFormat.textFormat.bold",
+            },
+          },
+          {
+            updateSheetProperties: {
+              properties: { sheetId, gridProperties: { frozenRowCount: 1 } },
+              fields: "gridProperties.frozenRowCount",
+            },
+          },
+        ],
+      },
+    });
+  }
+  return { spreadsheet_id: spreadsheetId, url: created.data.spreadsheetUrl, tab_title: tab };
+}
+
 // Read a cell range. (Drive read_file exports the whole sheet as CSV; this is cell-precise.)
 export async function readSheet(params: {
   account_alias: string;

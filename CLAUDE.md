@@ -73,10 +73,11 @@ Run `bash setup/06_register.sh` (registers the MCP server at user scope + copies
 `~/.claude/skills/`). Tell the user to **restart Claude** so it loads the server and skills.
 
 ### Step 6 — Create the tracker (after restart, once the MCP is live)
-On the first jobsearch use (or now, if the server is loaded), create their tracker Google Sheet with
-the google-mcp tools: a sheet named per `tracker.sheet_name` with header row
-`# | Employer | Location | State | Role | Recipient | Confidence | Status | Date Sent | Welcome`,
-then write its id into `tracker.sheet_id` in the profile.
+On the first jobsearch use (or now, if the server is loaded), auto-create their tracker with one call:
+`create_sheet(account_alias=<send_alias>, title=<tracker.sheet_name>, tab_title="Tracker",
+header=["#","Employer","Location","State","Role","Recipient","Confidence","Status","Date Sent","Welcome"])`.
+Write the returned `spreadsheet_id` into `tracker.sheet_id` in the profile and give the user the sheet
+URL. Never create a second tracker if `tracker.sheet_id` is already filled.
 
 ### Step 7 — Texting shortcut (optional, only if texting enabled)
 Walk them through **docs/SENDTEXT_SHORTCUT.md** to build the `SendText` Shortcut (4 actions), then

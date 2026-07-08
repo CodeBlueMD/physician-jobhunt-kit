@@ -70,11 +70,18 @@ criteria:
   welcome_note: "I want somewhere my family is genuinely welcome and safe."
 
 # ── TRACKER ──────────────────────────────────────────────────────────────────
-# A Google Sheet the kit logs every outreach to. Leave sheet_id blank and let
-# the assistant create one for you on first run (it writes the id back here).
+# A Google Sheet the kit logs every outreach to. LEAVE sheet_id BLANK — on your
+# first jobsearch run the kit auto-creates the sheet (with a formatted header row)
+# and writes its id back here, so it's reused from then on.
 tracker:
   sheet_id: ""
   sheet_name: "Physician Job Search — Email Tracker"
+
+# ── OUTREACH — follow-ups, OSINT email guessing, HR escalation ────────────────
+outreach:
+  followup_after_days: 7     # no reply after this many days → draft a follow-up (for your approval)
+  max_email_guesses: 3       # when guessing a recruiter's address, try up to this many permutations
+  escalate_to_hr: true       # no named recruiter / all guesses bounced → fall back to HR / recruiting@ inbox
 
 # ── TEXTING (optional, macOS only) ───────────────────────────────────────────
 # The sendtext skill can draft + send iMessage/SMS in your voice via a macOS

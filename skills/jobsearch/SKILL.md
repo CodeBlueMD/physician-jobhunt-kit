@@ -75,14 +75,31 @@ sponsorship filter. (Do not invent one.)
      at interview" · 🔴 documented hostility → **do NOT apply without flagging to the user first.**
    - Honest limit: small-town data is noisy; *absence* of incidents ≠ safe. Gold standard = talk
      to a current international physician on staff; suggest the user ask the recruiter to connect them.
-3. **Find the recipient email** — never fabricate a "verified" contact. Hierarchy:
-   - ✅ **Verified:** the recruiter's email printed on the official posting / in the user's own
-     sent mail. Confirm with WebFetch on the source page (search summaries sometimes *guess* — verify).
-   - 🔶 **Inferred:** if only a name is known, find the org's dominant email format (search
-     "<domain> email format") and construct it. Label confidence high/medium.
-   - 📥 **General inbox:** a verified general recruiting inbox (info@…) when no individual is public.
-   - 🌐 **Portal only:** if the employer publishes no email, address the draft to the user as a
-     template and note the application URL.
+3. **Find the recipient email** — never fabricate a "verified" contact. Walk this ladder top→down
+   and stop at the first that yields a usable address:
+   - ✅ **Verified:** the recruiter's email printed on the official posting / recruitment page / in
+     the user's own sent mail. Confirm with WebFetch on the source page (search summaries sometimes
+     *guess* emails — verify against the real page).
+   - 🔶 **OSINT-inferred (do this whenever there's no verified email):** actively construct a likely
+     address instead of giving up.
+     1. Get the org's real mail **domain** (their website / careers page).
+     2. Determine the **email format** — search `"<domain>" email format` (RocketReach / LeadIQ /
+        mailmo), or reverse-engineer it from ANY known address on the site (a press/contact/"info@"
+        address usually reveals the pattern), or from the user's own sent mail to that domain.
+     3. Build candidates from the recruiter's name in likely order:
+        `first.last@`, `flast@`, `firstl@`, `first_last@`, `first@`, `lastf@`. Cross-check any
+        redacted hints (ZoomInfo/Apollo "b***@…") to rank them.
+     4. **Label it 🔶 inferred + confidence** and send to the **single most likely** candidate
+        (not all at once — that looks like spam and burns the domain). If it bounces, the
+        failed-response check (§5b) automatically retries the next permutation, up to
+        `outreach.max_email_guesses`.
+   - 📥 **Recruiter → HR / general inbox (escalation):** if no individual can be found or the guesses
+     are exhausted, and `outreach.escalate_to_hr` is true, fall back to a **verified** general
+     recruiting inbox — look for `physicianrecruitment@`, `providerrecruitment@`, `recruiting@`,
+     `careers@`, `hr@`, or the address on the "Careers / Provider Opportunities" page. Address it to
+     "Hi there," / "Hello Physician Recruitment,". This is how you reach HR when there's no named recruiter.
+   - 🌐 **Portal only:** if the employer publishes no email at all (some large systems), address the
+     draft to the user as a template and note the application URL; a recruiter is assigned after applying.
 4. **Build one email per location**, addressed to the best available recipient (§4), and
    **send with google-mcp `send_message`** (alias = `identity.send_alias`, CV attached by path).
    `send_message` dispatches immediately → present the full list and send only on the user's go-ahead.
@@ -124,23 +141,43 @@ CV's attached — would love to learn more.
     literal `<p>`/`&lt;` artifacts BEFORE reporting "sent."
 - Use contractions and a natural voice; don't append a formal title block.
 
-## 5. Tracker
-- Live master = the Google Sheet at `tracker.sheet_id` (created during setup). If it's blank,
-  create one with google-mcp and write the id back into the profile.
+## 5. Tracker (auto-created)
+- Live master = the Google Sheet at `tracker.sheet_id`. **If `tracker.sheet_id` is blank, CREATE it
+  now** with google-mcp `create_sheet`:
+  `create_sheet(account_alias=<send_alias>, title=<tracker.sheet_name>, tab_title="Tracker",
+  header=["#","Employer","Location","State","Role","Recipient","Confidence","Status","Date Sent","Welcome"])`.
+  Then **write the returned `spreadsheet_id` back into `tracker.sheet_id` in `~/.jobhunt-kit/profile.yml`**
+  so it's reused forever after. Tell the user the sheet's URL. (Never create a second tracker if one
+  already exists — read the id from the profile first.)
 - Columns (A–J): `#, Employer, Location, State, Role, Recipient, Confidence, Status, Date Sent,
   Welcome`. Column J = Welcome (🟢/🟡/🔴 + reason) from step 2 — fill on every new row.
 - **Edit in place — don't regenerate.** `append_rows` for new sends, `update_cells` to flip a
   row's Status/Date Sent. Read current state with `read_sheet`.
 - Set `Date Sent` + `Status = SENT` only after `send_message` returns a messageId.
+- Status vocabulary: `SENT` · `BOUNCED` · `RETRIED` · `NO-REPLY` · `FOLLOWED-UP` · `REPLIED` · `PORTAL`.
 
-## 5b. Ongoing maintenance (every run + after the user sends)
+## 5b. Failed-response & bounce checks (run EVERY session + after the user sends)
+This is what turns one-shot emails into a real pipeline. Do all four each run:
 1. **Refresh the tracker** (read → append/update in place; never recreate).
-2. **Verify what was sent** — `list_messages` (`in:sent`) to confirm each recipient/subject; set
-   `Status = Sent` only on a real match.
-3. **Catch bounces** — `list_messages` query `from:mailer-daemon newer_than:1d` on the SENDING
-   account. (Gmail `newer_than` supports only d/m/y — use `1d`, not hours.) For each bounce: mark
-   the row `Bounced`, retry the next-most-likely address (first.last ↔ flast ↔ firstinitiallast ↔
-   first_last) or fall back to general inbox / portal, re-send, and log it.
+2. **Verify what was sent** — `list_messages` (`in:sent`) to confirm each recipient/subject actually
+   went out; set `Status = SENT` only on a real match.
+3. **Catch bounces (delivery failed) → retry ladder.** `list_messages` query
+   `from:mailer-daemon newer_than:1d` on the SENDING account (Gmail `newer_than` supports only
+   d/m/y — use `1d`, not hours). For each bounce:
+   - Mark the row `BOUNCED`.
+   - If the address was 🔶 OSINT-inferred, **retry the next permutation** in the ladder
+     (`first.last → flast → firstl → first_last → first → lastf`), up to `outreach.max_email_guesses`
+     total attempts. Re-send, log `RETRIED` + which address, and keep a short history in a Notes cell
+     (e.g. "v1 j.smith@ bounced 7/8 → retried jsmith@").
+   - If all guesses are exhausted, **escalate to HR / general recruiting inbox** (§3 step 3 📥), or
+     mark `PORTAL` and give the user the application URL.
+4. **No-reply follow-ups (delivered but silent).** For every row with `Status = SENT` whose
+   `Date Sent` is older than `outreach.followup_after_days` (default 7) AND with no reply in the
+   inbox (`list_messages` query `from:<recipient> newer_than:14d`, and check the thread), **draft a
+   short, friendly one-line follow-up** ("just floating this back up — still exploring [role] at
+   [facility] for [year]; happy to share more"). Present it to the user; on their OK, send and flip
+   the row to `FOLLOWED-UP`. If they've replied, mark `REPLIED` and stop chasing. Respect the recency
+   rule — never send a follow-up if the last contact was within `outreach.followup_after_days`.
 
 ## 6. Hard rules
 - Never invent a recipient and present it as verified. Inferring from a known org format is fine

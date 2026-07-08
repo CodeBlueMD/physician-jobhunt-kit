@@ -60,6 +60,18 @@ criteria:
   welcome_check: true
 ```
 
+## Outreach automation (`outreach`)
+The kit doesn't just send once and forget — it runs the pipeline for you:
+| Field | What it does |
+|---|---|
+| `followup_after_days` | If a recruiter hasn't replied in this many days, the next run drafts a friendly follow-up for your approval (default 7). |
+| `max_email_guesses` | When a recruiter's email isn't published, the kit infers it from the org's email format and tries the most likely address; if it bounces it walks a permutation ladder up to this many tries. |
+| `escalate_to_hr` | When there's no named recruiter or the guesses are exhausted, fall back to the HR / `recruiting@` / careers inbox instead of giving up. |
+
+The tracker Google Sheet is **created automatically** on your first run (you don't make it) and every
+send, bounce, retry, and follow-up is logged there with a status (`SENT`/`BOUNCED`/`RETRIED`/
+`NO-REPLY`/`FOLLOWED-UP`/`REPLIED`/`PORTAL`).
+
 ## Tip
 Your intro line (`training.summary`) is woven into every email, so make it sound like *you* and
 lead with your strengths. And once you've sent a few, ask the assistant to *"tune my texting voice

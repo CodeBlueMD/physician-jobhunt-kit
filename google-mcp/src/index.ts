@@ -7,7 +7,7 @@ import {
 import { listMessages, readMessage, createDraft, sendMessage } from "./tools/gmail.js";
 import { listEvents, createEvent } from "./tools/calendar.js";
 import { listFiles, readFile, uploadFile } from "./tools/drive.js";
-import { readSheet, updateCells, appendRows, clearRange, deleteRows } from "./tools/sheets.js";
+import { createSheet, readSheet, updateCells, appendRows, clearRange, deleteRows } from "./tools/sheets.js";
 import { createDoc, readDoc, appendDoc, replaceText } from "./tools/docs.js";
 import { createPresentation, readPresentation, addSlide } from "./tools/slides.js";
 import { createScript, getScript, updateScript } from "./tools/appsscript.js";
@@ -180,6 +180,16 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       }, required: ["account_alias", "spreadsheet_id", "range", "values"] },
     },
     {
+      name: "create_sheet",
+      description: "Create a NEW Google Sheet (spreadsheet), optionally with a bolded+frozen header row. Returns spreadsheet_id + url — save the id for later read/append/update calls.",
+      inputSchema: { type: "object", properties: {
+        account_alias: { type: "string", description: "Token alias matching a file in .tokens/ (e.g. 'personal', 'work')" },
+        title: { type: "string", description: "Spreadsheet title (shows in Drive)" },
+        header: { type: "array", description: "Optional header row, e.g. ['#','Employer','Location']", items: { type: "string" } },
+        tab_title: { type: "string", description: "Optional name for the first tab" },
+      }, required: ["account_alias", "title"] },
+    },
+    {
       name: "append_rows",
       description: "Append rows to the end of a Google Sheet.",
       inputSchema: { type: "object", properties: {
@@ -342,6 +352,9 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
         break;
       case "upload_file":
         result = await uploadFile(args as any);
+        break;
+      case "create_sheet":
+        result = await createSheet(args as any);
         break;
       case "read_sheet":
         result = await readSheet(args as any);
